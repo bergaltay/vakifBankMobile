@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="../static/portfolio.css">
+    <link rel="stylesheet" href="/static/widget.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="back-button">&larr;</div>
+            <h1>Portföyüm</h1>
+            <div class="calendar-icon"></div>
+        </header>
+
+        <nav class="tabs">
+            <div class="tab active">DETAY</div>
+            <div class="tab">İŞLEMLER</div>
+        </nav>
+
+        <section class="portfolio-details">
+            <div class="widget-top">
+                <h2>Yatırım Hesabım</h2>
+            <p class="account-number">{{accNum}}</p>
+
+            </div>
+
+            <!-- table ile bastır -->
+            <!--<div class="breakdown">
+                <div class="item">
+                    <span class="color-circle stock"></span>
+                    <p>Hisse Senedi</p>
+                    <p>87.50 TL</p>
+                </div>
+                <div class="item">
+                    <span class="color-circle fund"></span>
+                    <p>Yatırım Fonu</p>
+                    <p>15.44 TL</p>
+                </div>
+                <div class="item">
+                    <span class="color-circle balance"></span>
+                    <p>Yatırım Bakiyesi</p>
+                    <p>0.75 TL</p>
+                </div>
+            </div>-->
+           <section class="dashboard-container">
+    <h2>Hisse Senedi</h2>
+         <div class="widget-top">
+             <div class="total-portfolio">
+                <h3>{{totalValues[1]}} TL</h3>
+                <p class="change">{{totalValues[2]}}%</p>
+             </div>
+             <div class="card-body">
+                 {{pieChart|safe}}
+             </div>
+         </div>
+    <div class="widget-filter">
+        <div class="widget-filter-btn">
+            <p>B</p>
+        </div>
+        <div class="widget-filter-btn">
+            <p>Ay</p>
+        </div>
+        <div class="widget-filter-btn">
+            <p>Hafta</p>
+        </div>
+        <div class="widget-filter-btn">
+            <p>Gün</p>
+        </div>
+        <div class="widget-filter-btn">
+            <p>Saat</p>
+        </div>
+    </div>
+    {% if table_data %}
+    <div class="widget-container">
+        {% for row in table_data %}
+        <div class="widget">
+            <div class="widget-header">
+                <div style="display: flex; align-items: center;">
+                    <div class="widget-icon">
+                    <img src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ row['symbol'] | lower }}.png&w=2048&q=75">
+                    <!-- src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ row['symbol'] | lower }}.png&w=2048&q=75" -->
+                </div>
+                <h3>{{ row['symbol'] }}</h3>
+                </div>
+                <h3>{{ (row['curr_price']|float * row['quantity']|float) }} TL</h3>
+            </div>
+            <div class="widget-body">
+                <div class="widget-rowline">
+                    <p style="font-weight: bold; color: #4c90af; left: 0">{{(((row['curr_price']|float * row['quantity']|float)/totalValues[1])*100)|round(2)}}%</p>
+                </div>
+                <div class="widget-rowline">
+                    <p> </p>
+                </div>
+                <div class="widget-rowline">
+                    <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><strong>{{ row['ratio'] }}%</strong> ({{ row['profit'] }} TL)</p>
+                </div>
+            </div>
+            <div class="widget-body">
+                 <div class="progress-bar">
+                     <div id="progress-bar" class="progress" style="width: {{(((row['curr_price']|float * row['quantity']|float)/totalValues[1])*100)|round(2)}}%;"></div>
+                 </div>
+            </div>
+            <div class="widget-body">
+                    <div class="widget-rowline">
+                        <p>Satılabilir Adet</p>
+                        <strong>{{ row['quantity'] }}</strong>
+
+                    </div>
+                    <div class="widget-rowline">
+                        <p>Maliyet*</p>
+                        <strong> {{ row['buy_price'] }} TL</strong>
+                    </div>
+                    <div class="widget-rowline">
+                                        <p>Son İşlem Fiyatı</p>
+                        <strong> {{ row['curr_price'] }} TL</strong>
+                    </div>
+                </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Tabloda veri bulunmamaktadır.</p>
+    {% endif %}
+</section>
+
+
+            <div class="chart">
+                <!--<img src="pie-chart-placeholder.png" alt="Pie Chart">-->
+            </div>
+
+            <p class="info">Portföy değeri net olarak hesaplanmıştır.</p>
+        </section>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <script>
+        $(document).ready(function () {
+            var lastColumnIndex = $('#data-table').find('th').length - 1;
+            $('#data-table').DataTable({
+                paging: false,         // Enable pagination
+                scrollY: '400px',
+                searching: true,      // Enable search filter
+                info: true,           // Show table info
+                pageLength: 10,       // Default number of rows per page
+                lengthMenu: [5, 10, 25, 50, 100], // Options for rows per page
+                ordering: true,
+                order: [[lastColumnIndex, 'des']], //Ordered for the last column
+                language: {
+                    info: " _TOTAL_ veri gösteriliyor",
+                    search: "Ara:", // Custom search label
+                    lengthMenu: "Display _MENU_ records per page"
+                }
+
+            });
+        });
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="../static/login.css">
+</head>
+<body>
+<div class="container">
+  <!-- Header Section -->
+  <header>
+    <div class="icon">&#128100;</div>
+    <div class="logo">
+      <img src="https://www.vakifbank.com.tr/Templates/Default/assets/img/logo.svg" alt="VakıfBank Logo">
+    </div>
+    <div class="language">EN</div>
+  </header>
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature">
+      <div class="circle"></div>
+      <p>SKY Limit</p>
+    </div>
+    <div class="feature">
+      <div class="circle"></div>
+      <p>SKY Mevduat</p>
+    </div>
+    <div class="feature">
+      <div class="circle"></div>
+      <p>Vibox</p>
+    </div>
+    <div class="feature">
+      <div class="circle"></div>
+      <p>Güvenlik</p>
+    </div>
+    <div class="feature">
+      <div class="circle"></div>
+      <p>ViBi</p>
+    </div>
+  </section>
+
+
+  <!-- Login Form Section -->
+  <main class="login-form">
+    <div class="avatar">&#128100;</div>
+    <h2>Hoş Geldiniz</h2>
+    <form>
+      <div class="form-group">
+        <label for="username"></label>
+        <input type="text" id="username" placeholder="Kullanıcı Adınızı Giriniz" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Şifre</label>
+        <input type="password" id="password" placeholder="Şifrenizi Giriniz" required>
+      </div>
+      <button type="submit" class="login-btn" id="login-btn">Giriş Yap</button>
+      <p class="forgot-password">Şifremi Unuttum?</p>
+    </form>
+  </main>
+
+  <!-- Footer Menu -->
+  <footer class="footer-menu">
+    <!--<div class="menu-item">
+      <img src="fast-icon.png" alt="FAST İşlemleri">
+      <p>FAST İşlemleri</p>
+    </div>
+    <div class="menu-item">
+      <img src="market-icon.png" alt="Piyasa Bilgileri">
+      <p>Piyasa Bilgileri</p>
+    </div>
+    <div class="menu-item">
+      <img src="calculator-icon.png" alt="Hesaplama Araçları">
+      <p>Hesaplama Araçları</p>
+    </div>
+    <div class="menu-item">
+      <img src="others-icon.png" alt="Diğer İşlemler">
+      <p>Diğer İşlemler</p>
+    </div>-->
+  </footer>
+</div>
+<script>
+  console.error("asd")
+        document.getElementById('login-btn').addEventListener('click', async function () {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            //const errorMessage = document.getElementById('errorMessage');
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = "/home";
+                    console.error("asd123")
+                } else {
+                    //errorMessage.textContent = data.error;
+                }
+            } catch (error) {
+                //errorMessage.textContent = "An unexpected error occurred.";
+            }
+        });
+    </script>
+
+
+</body>
+</html>
