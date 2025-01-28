@@ -92,28 +92,85 @@ def getTickerListOfUser(tckn):
         print(e)
         return result
 
-def UserInvestmentDetails(tckn):
+def UserStockPortfolioDetails(tckn):
     cursor = conn.cursor()
     try:
         query = f"""
+        WITH OldestBuyDate AS (
+            SELECT
+                p.stockID,
+                MIN(p.buy_date) AS oldest_buy_date
+            FROM portfolio p
+            GROUP BY p.stockID
+        ),
+             AggregatedData AS (
+                 SELECT
+                     p.stockID,
+                     SUM(p.quantity) AS total_quantity,
+                     SUM(p.buy_price * p.quantity) / SUM(p.quantity) AS wa_buy_price
+                 FROM portfolio p
+                 GROUP BY p.stockID
+             )
         SELECT
             s.name AS stock_name,
-            ROUND(SUM(p.buy_price * p.quantity) / SUM(p.quantity), 2) AS wa_buy_price,
+            o.oldest_buy_date AS buy_date,
+            ROUND(a.wa_buy_price, 2) AS wa_buy_price,
             ROUND(c.price, 2) AS current_price,
-            SUM(p.quantity) AS total_quantity
-        FROM portfolio p
-                 INNER JOIN stocks s ON p.stockID = s.stockID
+            a.total_quantity AS total_quantity
+        FROM OldestBuyDate o
+                 INNER JOIN stocks s ON o.stockID = s.stockID
+                 INNER JOIN stock_price_curr c ON o.stockID = c.stockID
+                 INNER JOIN AggregatedData a ON o.stockID = a.stockID
+                 INNER JOIN portfolio p ON o.stockID = p.stockID
                  INNER JOIN users u ON p.userID = u.userID
-                 INNER JOIN stock_price_curr c ON p.stockID = c.stockID
         WHERE u.tckn = {tckn}
-        GROUP BY s.name, c.price;
+        GROUP BY s.name, o.oldest_buy_date, c.price, a.total_quantity, a.wa_buy_price
+        ORDER BY  (c.price*a.total_quantity) desc ;
         """
         cursor.execute(query)
         return cursor
     except Exception as e:
         print(e)
         return cursor
-
+def UserFundPortfolioDetails(tckn):
+    cursor = conn.cursor()
+    try:
+        query = f"""
+        WITH OldestBuyDate AS (
+            SELECT
+                fp.fundID,
+                MIN(fp.buy_date) AS oldest_buy_date
+            FROM fund_portfolio fp
+            GROUP BY fp.fundID
+        ),
+             AggregatedData AS (
+                 SELECT
+                     fp.fundID,
+                     SUM(fp.quantity) AS total_quantity,
+                     SUM(fp.buy_price * fp.quantity) / SUM(fp.quantity) AS wa_buy_price
+                 FROM fund_portfolio fp
+                 GROUP BY fp.fundID
+             )
+        SELECT
+            f.fund_name AS fund_name,
+            o.oldest_buy_date AS buy_date,
+            ROUND(a.wa_buy_price, 2) AS wa_buy_price,
+            ROUND(cf.price, 2) AS current_price,
+            a.total_quantity AS total_quantity
+        FROM OldestBuyDate o
+                 INNER JOIN funds f ON o.fundID = f.fundID
+                 INNER JOIN fund_price_curr cf ON o.fundID = cf.fundID
+                 INNER JOIN AggregatedData a ON o.fundID = a.fundID
+                 INNER JOIN fund_portfolio fp ON o.fundID = fp.fundID
+                 INNER JOIN users u ON fp.userID = u.userID
+        WHERE u.tckn = {tckn}
+        GROUP BY f.fund_name, o.oldest_buy_date, cf.price, a.total_quantity, a.wa_buy_price;
+        """
+        cursor.execute(query)
+        return cursor
+    except Exception as e:
+        print(e)
+        return cursor
 def updateCurrBalanceOfUser(balance,tckn):
     cursor = conn.cursor()
     try:
@@ -162,7 +219,7 @@ def getCurrPriceOfStocks():
         print(e)
         return None
 
-def getBuyandCurrTotal(tckn):
+def getStocksTotalBuyandCurr(tckn):
     cursor = conn.cursor()
     try:
         query = f"""
@@ -176,7 +233,78 @@ def getBuyandCurrTotal(tckn):
         cursor.execute(query)
         formatted_data = []
         result = cursor.fetchall()[0]
-        return result[0], result[1], round(result[1]/result[0]*100,2)
+        return result[0], result[1], round(((result[1]-result[0])/result[0])*100,2)
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        cursor.close()
+
+
+
+def getFundsTotalBuyandCurr(tckn):
+    cursor = conn.cursor()
+    try:
+        query = f"""
+        SELECT 
+            SUM(fp.buy_price * fp.quantity) AS buy_total,
+            SUM(cf.price * fp.quantity) AS curr_total
+        FROM fund_portfolio fp
+        INNER JOIN fund_price_curr cf ON fp.fundID = cf.fundID
+        INNER JOIN users u ON fp.userID = u.userID
+        WHERE u.tckn = {tckn};"""
+        cursor.execute(query)
+        result = cursor.fetchall()[0]
+        return result[0], result[1], round(((result[1]-result[0])/result[0])*100,2)
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        cursor.close()
+
+def getInvestmentSums(tckn):
+    cursor = conn.cursor()
+    try:
+        query = f"""
+        WITH StockValues AS (
+    SELECT 
+        ROUND(SUM(p.buy_price * p.quantity), 2) AS buy_total,
+        ROUND(SUM(c.price * p.quantity), 2) AS curr_total
+    FROM portfolio p
+    INNER JOIN stock_price_curr c ON p.stockID = c.stockID
+    INNER JOIN users u ON p.userID = u.userID
+    WHERE u.tckn = {tckn}
+),
+FundValues AS (
+    SELECT 
+        ROUND(SUM(fp.buy_price * fp.quantity), 2) AS buy_total,
+        ROUND(SUM(cf.price * fp.quantity), 2) AS curr_total
+    FROM fund_portfolio fp
+    INNER JOIN fund_price_curr cf ON fp.fundID = cf.fundID
+    INNER JOIN users u ON fp.userID = u.userID
+    WHERE u.tckn = {tckn}
+)
+SELECT 
+    'stocks' AS asset_type, 
+    StockValues.buy_total AS total_buy_value, 
+    StockValues.curr_total AS total_current_value
+FROM StockValues
+UNION ALL
+SELECT 
+    'funds' AS asset_type, 
+    FundValues.buy_total AS total_buy_value, 
+    FundValues.curr_total AS total_current_value
+FROM FundValues;
+"""
+        cursor.execute(query)
+        result = cursor.fetchall()
+        formatted_data = [{
+            'stocks_buy_total': result[0][1],
+            'stocks_curr_total': result[0][2],
+            'funds_buy_total': result[1][1],
+            'funds_curr_total': result[1][2],
+        }]
+        return formatted_data
     except Exception as e:
         print(e)
         return None

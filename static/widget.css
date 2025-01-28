@@ -5,7 +5,7 @@
 }
 
 .progress-bar {
-    background-color: #EEE;
+    background-color: lightgray;
     border-radius: 5px;
     height: 6px;
     width: 100%;
@@ -33,7 +33,6 @@
     border-bottom: 2px solid #ddd;
     padding: 15px;
     width: 100%; /* Full width for mobile */
-    max-height: 160px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
@@ -42,8 +41,20 @@
     border-bottom: 2px solid #ddd;
     padding: 15px;
     margin-bottom: 15px;
+    margin-top: 0;
     width: 100%; /* Full width for mobile */
-    height: 550px;
+    height: 420px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.widget-total-top{
+        background-color: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    margin-top: 0;
+    width: 100%; /* Full width for mobile */
+    height: 600px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
@@ -68,9 +79,15 @@
     margin-bottom: 10px;
     position: relative; /* Allows precise positioning of the icon */
 }
+.widget-header-fund{
+    display: flex;
+    align-items: center; /* Align items vertically */
+    text-align: left;
+    margin-bottom: 10px;
+    position: relative; /* Allows precise positioning of the icon */
+}
 .widget-header h3 {
     font-size: 18px;
-    color: #333;
     margin: 0;
 }
 
@@ -95,8 +112,22 @@
     font-size: 16px;
     color: dimgrey;
 }
+.widget-rowline strong.text-red {
+    color: red !important; /* Add !important if absolutely necessary */
+}
+
+.widget-rowline strong.text-green {
+    color: green !important; /* Add !important if absolutely necessary */
+}
 
 
+.widget strong fas fa-arrow-down.text-red {
+    color: red;
+}
+
+.i fas fa-arrow-down.text-green {
+    color: green;
+}
 .widget p.text-red {
     color: red;
 }
@@ -108,4 +139,11 @@
     margin: 5px 0;
     font-size: 14px;
     color: #666;
+}
+.text-red {
+    color: red;
+}
+
+.text-green {
+    color: green;
 }

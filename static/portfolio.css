@@ -74,7 +74,6 @@ header .calendar-icon {
 
 .total-portfolio h3 {
     font-size: 28px;
-    color: #333;
 }
 
 .total-portfolio .change {
@@ -138,13 +137,39 @@ header .calendar-icon {
     padding: 0 0 0 15px;
     color: #999999;
 }
+.dashboard-container-header h2{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    height: 40px;
+    background-color: #eeeeee;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-left: 15px;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.portfolio-details-header h2{
+    color: #999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    height: 40px;
+    background-color: #eeeeee;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
 .card-body{
     width: 400px;
-    height: 350px;
+    height: 300px;
     max-width: 100%;
     margin: 20px auto;
     text-align: center;
 }
+
 .widget-filter{
     background-color: #f9f9f9;
     border-bottom: 2px solid #ddd;
