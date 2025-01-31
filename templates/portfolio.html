@@ -57,9 +57,13 @@
                     </div>
                 </div>
                 <div id="stock_table"></div>
+                <div class="dashboard-container-header">
+                        <h2>Kar Aralığı</h2>
+                </div>
                 <div class="widget">
                         <div>
                             <nav class="tabs">
+                                <div id="home" class="tab">        <a href="/home#stock_table">Toplam</a></div>
                                 <div id="1" class="tab">        <a href="/home/1#stock_table">Bugün</a></div>
                                 <div id="7" class="tab">        <a href="/home/7#stock_table">1 Hafta</a></div>
                                 <div id="30" class="tab">       <a href="/home/30#stock_table">1 Ay</a></div>
@@ -72,21 +76,21 @@
                 {% if table_data %}
                 <div  class="widget-container">
                     {% for row in table_data %}
-                    <a href="/info/{{ row['symbol'] }}"  style="text-decoration: none; color: inherit;">
+                    <a href="/info/{{ row['stock_name'] }}"  style="text-decoration: none; color: inherit;">
                         <div class="widget">
                             <div class="widget-header">
                                 <div style="display: flex; align-items: center;">
                                     <div class="widget-icon">
-                                        <img src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ row['symbol'] | lower }}.png&w=2048&q=75">
+                                        <img src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ row['stock_name'] | lower }}.png&w=2048&q=75">
                                     </div>
-                                    <h3>{{ row['symbol'] }}</h3>
+                                    <h3>{{ row['stock_name'] }}</h3>
                                 </div>
-                                <h3>{{ "{:,.2f}".format(row['curr_price']|float * row['quantity']|float) }} TL</h3>
+                                <h3>{{ "{:,.2f}".format(row['total']) }} TL</h3>
                             </div>
                             <div class="widget-body">
                                 <div class="widget-rowline">
                                     <p style="font-weight: bold; color: #4c90af; left: 0">
-                                        {{ "{:,.2f}".format((((row['curr_price']|float * row['quantity']|float)/stockTotalValues[1])*100)|round(2)) }}%
+                                        {{ "{:,.2f}".format(((row['total']/stockTotalValues[1])*100)|round(2)) }}%
                                     </p>
                                 </div>
                                 <div class="widget-rowline">
@@ -107,7 +111,7 @@
                                 </div>
                                 <div class="widget-rowline">
                                     <p>Maliyet*</p>
-                                    <strong>{{ row['buy_price'] }} TL</strong>
+                                    <strong>{{ row['wa_buy_price'] }} TL</strong>
                                 </div>
                                 <div class="widget-rowline">
                                     <p>Son İşlem Fiyatı</p>
@@ -117,7 +121,7 @@
                             <div>
                                 <p style="text-align: left; margin-top: 5px;">Pozisyon Süresi:
                                     <strong>{{ row['days_passed'] }} Gün </strong>
-                                    <a style="margin-left: 4px;">({{ row['buy_date_user']}})</a>
+                                    <a style="margin-left: 4px;">({{ row['from_this_time']}})</a>
                                 </p>
                             </div>
                         </div>
@@ -209,6 +213,7 @@
             var pageUrl = window.location.href;
             const urlList = pageUrl.split("/");
             var date = urlList[urlList.length-1].split("#")[0];
+            console.error(date);
             document.getElementById(date).classList.add("active");
             var lastColumnIndex = $('#data-table').find('th').length - 1;
             $('#data-table').DataTable({

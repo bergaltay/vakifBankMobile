@@ -3,6 +3,7 @@ import jwt
 from flask import Flask, render_template, request, jsonify, redirect, make_response
 import os
 import DBOperators
+import db_operations
 import graphOperators
 import misc
 
@@ -61,8 +62,7 @@ def home():
     cursor = DBOperators.tickerListOfUser(tckn)
     try:
         cursor.fetchall()
-        info_data = misc.detailsFormatter(DBOperators.UserStockPortfolioDetails(tckn).fetchall())
-        info_data = misc.dataFormatter(info_data)
+        info_data = db_operations.get_user_stock_info(tckn,0)
         funds_data = misc.detailsFormatter(DBOperators.UserFundPortfolioDetails(tckn).fetchall())
         funds_data = misc.dataFormatter(funds_data)
         acc_num = DBOperators.getAccNumber(tckn)
@@ -96,8 +96,7 @@ def portfolio(dayInterval):
     cursor = DBOperators.tickerListOfUser(tckn)
     try:
         cursor.fetchall()
-        info_data = misc.detailsFormatter(DBOperators.UserStockPortfolioDetails(tckn).fetchall())
-        info_data = misc.dataFormatter(info_data)
+        info_data = db_operations.get_user_stock_info(tckn,dayInterval)
         funds_data = misc.detailsFormatter(DBOperators.UserFundPortfolioDetails(tckn).fetchall())
         funds_data = misc.dataFormatter(funds_data)
         acc_num = DBOperators.getAccNumber(tckn)

@@ -49,7 +49,7 @@ def getGraphOfPortfolio(data):
 
 def getGraphOfStockPortfolio(data):
     values = [item["total"] for item in data]
-    labels = [item["symbol_graph"] for item in data]
+    labels = [item["stock_name"] for item in data]
     pie_fig = go.Figure([
         go.Pie(
             labels=labels,
