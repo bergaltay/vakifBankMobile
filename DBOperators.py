@@ -231,7 +231,6 @@ def getStocksTotalBuyandCurr(tckn):
         where u.tckn = {tckn}
         """
         cursor.execute(query)
-        formatted_data = []
         result = cursor.fetchall()[0]
         return result[0], result[1], round(((result[1]-result[0])/result[0])*100,2)
     except Exception as e:
@@ -310,3 +309,24 @@ FROM FundValues;
         return None
     finally:
         cursor.close()
+
+
+def getXdayHistoryOfSymbol(symbol,day):
+    cursor = conn.cursor()
+    try:
+        query=f"""
+        select sp.open, sp.high, sp.low, sp.close,sp.time from stock_price_history as sp
+                  inner join stocks as s on sp.stockID = s.stockID
+        where s.name = '{symbol}' and datediff(current_timestamp,sp.time)<{day};
+        """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        cursor.close()
+
+
+

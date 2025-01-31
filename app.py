@@ -41,7 +41,7 @@ def login():
     try:
         if int(password) == int(psw):
             token = jwt.encode(
-                {"username": username, "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+                {"username": username, "exp": datetime.datetime.now() + datetime.timedelta(hours=1)},
                 app.config["SECRET_KEY"],
                 algorithm="HS256"
             )
@@ -94,27 +94,43 @@ def portfolio(dayInterval):
     days = dayInterval
     tckn = getUserName()
     cursor = DBOperators.tickerListOfUser(tckn)
-    accNum = 0
     try:
         cursor.fetchall()
         info_data = misc.detailsFormatter(DBOperators.UserStockPortfolioDetails(tckn).fetchall())
         info_data = misc.dataFormatter(info_data)
-        accNum = DBOperators.getAccNumber(tckn)
+        funds_data = misc.detailsFormatter(DBOperators.UserFundPortfolioDetails(tckn).fetchall())
+        funds_data = misc.dataFormatter(funds_data)
+        acc_num = DBOperators.getAccNumber(tckn)
+        investment_sums = DBOperators.getInvestmentSums(tckn)
     except Exception as e:
         print(e)
+        acc_num = ""
         info_data = []
+        funds_data = []
+        investment_sums = []
     finally:
         cursor.close()
     return render_template('portfolio.html',
-                           username=DBOperators.getUserTCKN(tckn),
-                           accNum=accNum,
-                           currBalance=DBOperators.getUserCurrentBalance(tckn),
-                           table_data=info_data,
-                           totalValues=DBOperators.getStocksTotalBuyandCurr(tckn),
-                           pieChart=graphOperators.getGraphOfStockPortfolio(info_data),
-                           table_data2=["a","a","b","c","d"],
-                           )
+                            username=DBOperators.getUserTCKN(tckn),
+                            accNum=acc_num,
+                            currBalance=DBOperators.getUserCurrentBalance(tckn),
+                            table_data=info_data,
+                            stockTotalValues=DBOperators.getStocksTotalBuyandCurr(tckn),
+                            fundsTotalValues=DBOperators.getFundsTotalBuyandCurr(tckn),
+                            pieChart=graphOperators.getGraphOfStockPortfolio(info_data),
+                            table_data2=funds_data,
+                            pieChart2=graphOperators.getGraphOfFundsPortfolio(funds_data),
+                            pieChart3=graphOperators.getGraphOfPortfolio(investment_sums),
+                            investment_sums = misc.investmentSumFormatter(investment_sums),
+                            )
 
+@app.route('/info/<symbol>', endpoint="symbol_info")
+@token_required
+def symbol_info(symbol):
+    return render_template('symbol_info.html',
+                           symbol=symbol,
+                           chart=graphOperators.getGraphOfSymbolPrice(DBOperators.getXdayHistoryOfSymbol(symbol,7))
+                           )
 
 
 

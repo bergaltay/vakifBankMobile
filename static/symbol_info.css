@@ -1,0 +1,204 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffcc00;
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 0;
+}
+.buysell-tabs {
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.buysell-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.buysell-tab.active {
+    border-bottom: 3px solid #ffcc00;
+    font-weight: bold;
+}
+header .back-button,
+header .calendar-icon {
+    font-size: 24px;
+}
+
+
+.portfolio-details {
+    text-align: center;
+}
+
+.portfolio-details h2 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.portfolio-details .account-number {
+    color: gray;
+    font-size: 14px;
+}
+
+.card-body{
+    background-color: #f9f9f9;
+    width: 400px;
+    height: 180px;
+    max-width: 100%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.info-body{
+    border-bottom: 2px solid #ddd;
+    width: 100%;
+    height: 600px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.widget-rowline strong {
+    justify-content: center;
+    text-align: right;
+    font-size: 16px;
+    color: dimgrey;
+}
+hr{
+    height:2px;
+    border-width:0;
+    color: #aaaaaa;
+    background-color: #cfcfcf;
+    margin: 5px 0 5px 0;
+}
+.p-upper {
+    font-size: 16px !important;
+    font-weight: bold;
+}
+
+.widget-header p{
+    color: #666;
+    font-size: 16px !important;
+    font-weight: bold;
+}
+/* Al-Sat Kutusu */
+.buysell-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.buysell-widget {
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+    padding: 15px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.buysell-widget-top {
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    margin-top: 0;
+    width: 100%;
+    height: 420px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.buysell-widget-total-top{
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    margin-top: 0;
+    width: 100%;
+    height: 600px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.buysell-widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+    position: relative;
+}
+.buysell-widget-header-fund{
+    display: flex;
+    align-items: center;
+    text-align: left;
+    margin-bottom: 10px;
+    position: relative;
+}
+.buysell-widget-header h3 {
+    font-size: 18px;
+    margin: 0;
+}
+.buysell-widget-body{
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: auto;
+    overflow-x: auto;
+}
+.buysell-widget-rowline {
+    text-align: left;
+}
+.buysell-widget-rowline strong {
+    font-size: 16px;
+    color: dimgrey;
+}
+.buysell-widget-rowline strong.text-red {
+    color: red !important;
+}
+
+.buysell-widget-rowline strong.text-green {
+    color: green !important;
+}
+.buysell-widget p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+.buysell-widget select{
+    text-align: left;
+    height: 32px;
+    width: 160px;
+    background-color: #f9f9f9;
+    border: 0;
+}
+
+/*Sütünlar*/
+
+
+

@@ -6,7 +6,6 @@ def fetch_and_store_stock_data():
         connection = DBConnector.get_db_connection()
         cursor = connection.cursor()
 
-        # Fetch all stocks from the database
         cursor.execute("SELECT stockID, name FROM stocks")
         stocks = cursor.fetchall()
 
@@ -15,22 +14,21 @@ def fetch_and_store_stock_data():
             return
 
         for stockID, stock_name in stocks:
+            print(stockID, stock_name)
             try:
                 yfinance_stock_name = f"{stock_name}.IS"
                 print(f"Processing stock: {stock_name}, YFinance Name: {yfinance_stock_name}")
 
-                # Fetch stock data
                 stock = yf.Ticker(yfinance_stock_name)
-                stock_data = stock.history(period="2d", interval="30m")
+                stock_data = stock.history(period="3mo", interval="1d")
                 stock_data.reset_index(inplace=True)
-
+                print(stock_data)
                 if stock_data.empty:
                     print(f"No data fetched for {stock_name} ({yfinance_stock_name})")
                     continue
 
                 print(f"Fetched {len(stock_data)} rows for {stock_name} ({yfinance_stock_name})")
 
-                # Insert data into the database
                 sql = """
                 INSERT INTO stock_price_history (stockID, time, price, open, high, low, close, volume)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
@@ -40,10 +38,10 @@ def fetch_and_store_stock_data():
                 """
 
                 for _, row in stock_data.iterrows():
-                    print(f"Inserting data for {stock_name} at time {row['Datetime']} with price {row['Close']}")
+                    print(f"Inserting data for {stock_name} at time {row['Date']} with price {row['Close']}")
                     data = (
                         stockID,
-                        row['Datetime'].to_pydatetime(),
+                        row['Date'].to_pydatetime(),
                         row['Close'],
                         row['Open'],
                         row['High'],

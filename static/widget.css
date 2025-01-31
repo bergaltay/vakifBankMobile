@@ -48,7 +48,7 @@
     transition: transform 0.3s ease;
 }
 .widget-total-top{
-        background-color: #f9f9f9;
+    background-color: #f9f9f9;
     border-bottom: 2px solid #ddd;
     padding: 15px;
     margin-bottom: 15px;
@@ -65,26 +65,24 @@
     background-color: #eeeeee;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 600px) {
     .widget {
         width: 100%;
     }
 }
-/* Header with Icon */
 .widget-header {
     display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: space-between; /* Center the text and icon */
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 10px;
-    position: relative; /* Allows precise positioning of the icon */
+    position: relative;
 }
 .widget-header-fund{
     display: flex;
-    align-items: center; /* Align items vertically */
+    align-items: center;
     text-align: left;
     margin-bottom: 10px;
-    position: relative; /* Allows precise positioning of the icon */
+    position: relative;
 }
 .widget-header h3 {
     font-size: 18px;
@@ -100,24 +98,27 @@
 }
 .widget-body{
     margin-bottom: 5px;
-    display: flex;              /* Enable Flexbox for horizontal alignment */
-    justify-content: space-between; /* Align items to the left (default), change to center or right if needed */
-    width: auto;                /* Adjust width as needed */
+    display: flex;
+    justify-content: space-between;
+    width: auto;
     overflow-x: auto;
 }
 .widget-rowline {
-    text-align: left; /* Center text within each item */
+    width: auto;
+    height: auto;
+    align-items: center;
+    text-align: left;
 }
 .widget-rowline strong {
     font-size: 16px;
     color: dimgrey;
 }
 .widget-rowline strong.text-red {
-    color: red !important; /* Add !important if absolutely necessary */
+    color: red !important;
 }
 
 .widget-rowline strong.text-green {
-    color: green !important; /* Add !important if absolutely necessary */
+    color: green !important;
 }
 
 

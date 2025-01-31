@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VakıfBank Mobil</title>
+    <link rel="stylesheet" href="/static/widget.css">
+    <link rel="stylesheet" href="/static/symbol_info.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="back-button"><a style="text-decoration: none" href="/home">&larr;</a></div>
+                <h1 style="left: 0">{{symbol | upper}} </h1>
+            <div class="calendar-icon"></div>
+        </header>
+        <section class="portfolio-details">
+            <div class="card-body">
+                {{ chart|safe }}
+            </div>
+            <!--<div class="buysell-container">
+                <nav class="buysell-tabs">
+                    <div class="buysell-tab active">ALIŞ</div>
+                    <div class="buysell-tab">SATIŞ</div>
+                </nav>
+                </div>
+                <div class="buysell-widget">
+                    <div class="widget-header">
+                        <p>Paranın Çekileceği Hesap</p>
+                    </div>
+                    <br>
+                    <div class="widget-body">
+                        <div class="widget-rowline">
+                            <p>Bakiye</p>
+                        </div>
+                        <div class="widget-rowline">
+                            <p class="p-upper"> 125.45 TL </p>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-rowline">
+                            <p>Borsa İşlem Limiti </p>
+                        </div>
+                        <div class="widget-rowline">
+                            <p class="p-upper"> 242.65 TL </p>
+                        </div>
+                    </div>
+                    </div>
+                <div class="buysell-widget">
+                    <div class="widget-header">
+                        <p>Hisse Senedi Bilgileri</p>
+                    </div>
+                    <div class="widget-header">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="widget-icon">
+                                        <img src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ symbol | lower }}.png&w=2048&q=75">
+                                    </div>
+                                    <h3>{{ symbol }}</h3>
+                                </div>
+                                <h3> 4545 TL</h3>
+                            </div>
+                    <br>
+                    <div class="widget-body">
+                        <div class="widget-rowline">
+                            <p>Son Fiyata Göre Alınabilir Adet</p>
+                        </div>
+                        <div class="widget-rowline">
+                            <p class="p-upper"> 12</p>
+                        </div>
+                    </div>
+                    </div>
+                <div class="buysell-widget">
+                    <div class="widget-header">
+                        <p>Emir Bilgileri</p>
+                    </div>
+                    <br>
+                    <div class="widget-body">
+                        <div class="widget-rowline" style="width: 100%;">
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                <p>Emir Tipi</p>
+                                </div>
+                                <div class="widget-rowline">
+                                    <select name="fiyat-selector" id="fiyat-selector">
+                                        <option value="limit-fiyat">Limit Fiyatlı</option>
+                                        <option value="piyasa-fiyat">Piyasa Fiyatlı</option>
+                                        <option value="piyasadan-limit">Piyasadan Limitli</option>
+                                        <option value="dengeleyici">Dengeleyici</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                <p>Geçerlilik</p>
+                                </div>
+                                <div class="widget-rowline">
+                                    <select name="gecerlilik" id="gecerlilik">
+                                        <option value="gunluk">Günlük</option>
+                                        <option value="kalan-iptal">Kalanı İptal Et</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                <p>Fiyat</p>
+                                </div>
+                                <div class="widget-rowline">
+                                    <p>3.50 TL</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                <p>Adet</p>
+                                </div>
+                                <div class="widget-rowline">
+                                    <p>0.00</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                <p>Tutar</p>
+                                </div>
+                                <div class="widget-rowline">
+                                    <p>0.00 TL</p>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>-->
+            <div class="widget-container">
+                <div class="widget">
+                    <div class="widget-header">
+                        <h2>Detay Bilgileri</h2>
+                    </div>
+                    <div>
+                        <div class="widget-body">
+                        <div class="widget-rowline">
+                            <p>Hisse Senedi Adı </p>
+                        </div>
+                        <div class="widget-rowline">
+                            <p class="p-upper"> {{symbol|upper}} </p>
+                        </div>
+                    </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Hisse Senedi Kodu </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Pazar </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Satılabilir Adet </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Bloke Adet </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Son İşlem Fiyatı </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Birim Maliyet </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Maliyet Tutar </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Kar/Zarar </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Tutar </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{symbol|upper}} </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+</body>
+</html>
