@@ -80,7 +80,6 @@
   </footer>
 </div>
 <script>
-  console.error("asd")
         document.getElementById('login-btn').addEventListener('click', async function () {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -97,7 +96,6 @@
 
                 if (response.ok) {
                     window.location.href = "/home";
-                    console.error("asd123")
                 } else {
                     //errorMessage.textContent = data.error;
                 }

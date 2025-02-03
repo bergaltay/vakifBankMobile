@@ -140,6 +140,21 @@ header .calendar-icon {
     margin-bottom: 0;
     font-weight: bold;
 }
+.dashboard-container-header button{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    height: 40px;
+    padding-right: 25px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #999999;
+    background-color: inherit;
+    border: none;
+}
+
+
 .portfolio-details-header h2{
     color: #999999;
     display: flex;
@@ -155,7 +170,7 @@ header .calendar-icon {
 
 .card-body{
     width: 400px;
-    height: 300px;
+    height: 400px;
     max-width: 100%;
     margin: 20px auto;
     text-align: center;
@@ -183,4 +198,7 @@ header .calendar-icon {
 }
 .widget-filter-btn:hover{
     background-color: #eeeeee;
+}
+#stock-widgets{
+    display: none;
 }
