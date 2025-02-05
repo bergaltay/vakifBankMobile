@@ -6,6 +6,8 @@
     <title>VakıfBank Mobil</title>
     <link rel="stylesheet" href="../static/portfolio.css">
     <link rel="stylesheet" href="/static/widget.css">
+    <script src="/static/js/numberMasker.js"></script>
+    <script src="/static/js/portfolio.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -32,8 +34,11 @@
             <div class="widget-total-top">
                 <p class="account-number">{{ accNum }}</p>
                 <div class="total-portfolio">
-                    <h3>{{ "{:,.2f}".format(investment_sums['current_total']) }} TL</h3>
-                    <p style="margin-top: 5px;">Ana Para: <strong>{{ "{:,.2f}".format(investment_sums['buy_total']) }} TL</strong></p>
+                    <div class="price-eye">
+                        <h3 class="user-info">{{ "{:,.2f}".format(investment_sums['current_total']) }} TL </h3>
+                        <button id="eyeBtn" onclick="toggleMask()" class="fa-solid fa-eye"></button>
+                    </div>
+                    <p style="margin-top: 5px;">Ana Para: <strong  class="user-info">{{ "{:,.2f}".format(investment_sums['buy_total']) }} TL</strong></p>
                     <p class="change" style="margin-top: 5px;"><i class="{{ 'fas fa-arrow-down !important' if stockTotalValues[2]|float < 0 else 'fas fa-arrow-up' }}"></i> {{ investment_sums['change_ratio'] }}%</p>
                 </div>
                 <div class="card-body">
@@ -44,15 +49,15 @@
             <div class="dashboard-container-header">
                     <div class="header-menu">
                         <h2>Hisse Senetleri</h2>
-                        <button id="stocks-div-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                        <button onclick="stocks_div_toggleBtn()" id="stocks-div-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
                     </div>
             </div>
             <section class="dashboard-container">
                 <div id="stocks-div" >
                     <div class="widget-top">
                         <div class="total-portfolio">
-                            <h3>{{ "{:,.2f}".format(stockTotalValues[1]) }} TL</h3>
-                            <p style="margin-top: 5px;">Ana Para: <strong>{{  "{:,.2f}".format(stockTotalValues[0]) }} TL</strong></p>
+                            <h3 class="user-info">{{ "{:,.2f}".format(stockTotalValues[1]) }} TL</h3>
+                            <p style="margin-top: 5px;">Ana Para: <strong class="user-info">{{  "{:,.2f}".format(stockTotalValues[0]) }} TL</strong></p>
                             <p class="change" style="margin-top: 5px;"><i class="{{ 'fas fa-arrow-down !important' if stockTotalValues[2]|float < 0 else 'fas fa-arrow-up' }}"></i> {{ stockTotalValues[2] }}%</p>
                         </div>
                         <div class="card-body">
@@ -86,7 +91,7 @@
                                             </div>
                                             <h3>{{ row['stock_name'] }}</h3>
                                         </div>
-                                        <h3>{{ "{:,.2f}".format(row['total']) }} TL</h3>
+                                        <h3 class="user-info">{{ "{:,.2f}".format(row['total']) }} TL</h3>
                                     </div>
                                     <div class="widget-body">
                                         <div class="widget-rowline">
@@ -96,7 +101,9 @@
                                         </div>
                                         <div class="widget-rowline">
                                             <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
-                                                <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> ({{ "{:,.2f}".format(row['profit']|float) }} TL)
+                                                <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
+                                                    <i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong>
+                                                <i class="user-info" style="font-style:normal">({{ "{:,.2f}".format(row['profit']|float) }} TL)</i>
                                             </p>
                                         </div>
                                     </div>
@@ -139,14 +146,14 @@
                 <div class="dashboard-container-header">
                     <div class="header-menu">
                         <h2>Yatırım Fonları</h2>
-                        <button id="funds-div-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                        <button id="funds-div-toggleBtn" onclick="funds_div_toggleBtn()" class="btnToggle fa-solid fa-caret-down"></button>
                     </div>
                 </div>
                 <div id="funds-div">
                     <div class="widget-top">
                     <div class="total-portfolio">
-                        <h3>{{ "{:,.2f}".format(fundsTotalValues[1]|round(2)) }} TL</h3>
-                        <p style="margin-top: 5px;">Ana Para: <strong>{{  "{:,.2f}".format(fundsTotalValues[0]|round(2)) }} TL</strong></p>
+                        <h3 class="user-info">{{ "{:,.2f}".format(fundsTotalValues[1]|round(2)) }} TL</h3>
+                        <p style="margin-top: 5px;">Ana Para: <strong class="user-info">{{  "{:,.2f}".format(fundsTotalValues[0]|round(2)) }} TL</strong></p>
                         <p class="change" style="margin-top: 5px;"><i class="{{ 'fas fa-arrow-down !important' if stockTotalValues[2]|float < 0 else 'fas fa-arrow-up' }}"></i> {{ fundsTotalValues[2] }}%</p>
                     </div>
                     <div class="card-body">
@@ -162,7 +169,7 @@
                                     <h3>{{ row['symbol'] }}</h3>
                                 </div>
                             </div>
-                            <h3 style="text-align: right" >{{ "{:,.2f}".format(((row['curr_price']|float * row['quantity']|float))|round(2)) }} TL</h3>
+                            <h3 style="text-align: right" class="user-info" >{{ "{:,.2f}".format(((row['curr_price']|float * row['quantity']|float))|round(2)) }} TL</h3>
                             <div class="widget-body">
                                 <div class="widget-rowline">
                                     <p style="font-weight: bold; color: #4c90af; left: 0">
@@ -171,7 +178,7 @@
                                 </div>
                                 <div class="widget-rowline">
                                     <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
-                                        <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> ({{ "{:,.2f}".format(row['profit']|float) }} TL)
+                                        <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> <i class="user-info" style="font-style: normal">({{ "{:,.2f}".format(row['profit']|float) }} TL)</i>
                                     </p>
                                 </div>
                             </div>
@@ -212,72 +219,5 @@
         <div class="chart">
             <p class="info">Portföy değeri net olarak hesaplanmıştır.</p>
         </div>
-    <script>
-
-        $(document).ready(function () {
-          $("#stocks-div-toggleBtn").click(function(){
-              const x = document.getElementById("stocks-div-toggleBtn")
-              if (x.classList.contains("fa-caret-down")){
-                  x.classList.remove("fa-caret-down")
-                  x.classList.add("fa-caret-up")
-              }else{
-                  x.classList.remove("fa-caret-up")
-                  x.classList.add("fa-caret-down")
-              }
-            $("#stocks-div").animate({
-              height: 'toggle'
-            });
-          });
-          $("#funds-div-toggleBtn").click(function(){
-              const x = document.getElementById("funds-div-toggleBtn")
-              if (x.classList.contains("fa-caret-down")){
-                  x.classList.remove("fa-caret-down")
-                  x.classList.add("fa-caret-up")
-              }else{
-                  x.classList.remove("fa-caret-up")
-                  x.classList.add("fa-caret-down")
-              }
-            $("#funds-div").animate({
-              height: 'toggle'
-            });
-          });
-            var pageUrl = window.location.href;
-            const urlList = pageUrl.split("/");
-            var date = urlList[urlList.length-1].split("#")[0];
-            console.error(date);
-            document.getElementById(date).classList.add("active");
-            var lastColumnIndex = $('#data-table').find('th').length - 1;
-            $('#data-table').DataTable({
-                paging: false,
-                scrollY: '400px',
-                searching: true,
-                info: true,
-                pageLength: 10,
-                lengthMenu: [5, 10, 25, 50, 100],
-                ordering: true,
-                order: [[lastColumnIndex, 'des']],
-                language: {
-                    info: "_TOTAL_ veri gösteriliyor",
-                    search: "Ara:",
-                    lengthMenu: "Display _MENU_ records per page"
-                }
-            });
-
-            $('#new-data-table').DataTable({
-                paging: false,
-                scrollY: '400px',
-                searching: true,
-                info: true,
-                pageLength: 10,
-                lengthMenu: [5, 10, 25, 50, 100],
-                ordering: true,
-                language: {
-                    info: "_TOTAL_ veri gösteriliyor",
-                    search: "Ara:",
-                    lengthMenu: "Display _MENU_ records per page"
-                }
-            });
-        });
-    </script>
 </body>
 </html>

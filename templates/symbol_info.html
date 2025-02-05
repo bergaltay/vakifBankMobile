@@ -6,6 +6,7 @@
     <title>VakıfBank Mobil</title>
     <link rel="stylesheet" href="/static/widget.css">
     <link rel="stylesheet" href="/static/symbol_info.css">
+    <script src="/static/js/symbol_info.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
@@ -19,7 +20,6 @@
             <div class="calendar-icon"></div>
         </header>
         <section class="portfolio-details">
-
             <div class="card-body">
                 <br>
                 <p>{{symbol | upper}} (30 Gün)</p>
@@ -32,7 +32,7 @@
                             <h2>Haftalık Fiyat Bilgileri</h2>
                         </div>
                         <div class="widget-rowline">
-                            <button id="price-info-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                            <button id="price-info-toggleBtn" onclick="price_info_toggleBtn()" class="btnToggle fa-solid fa-caret-down"></button>
                         </div>
                     </div>
                     <div id="price-info">
@@ -211,18 +211,18 @@
                             <h2>Detay Bilgileri</h2>
                         </div>
                         <div class="widget-rowline">
-                            <button id="stock-info-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                            <button id="stock-info-toggleBtn" onclick="stock_info_toggleBtn()" class="btnToggle fa-solid fa-caret-down"></button>
                         </div>
                     </div>
                     <div id="stock-info">
                         <div class="widget-body">
-                        <div class="widget-rowline">
-                            <p>Hisse Senedi Adı </p>
+                            <div class="widget-rowline">
+                                <p>Hisse Senedi Adı </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{stock_info['stock_full_name']|upper}} </p>
+                            </div>
                         </div>
-                        <div class="widget-rowline">
-                            <p class="p-upper"> {{stock_info['stock_full_name']|upper}} </p>
-                        </div>
-                    </div>
                         <hr>
                         <div class="widget-body">
                             <div class="widget-rowline">
@@ -305,42 +305,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
-
-
     </div>
-    <script>
-        $(document).ready(function(){
-          $("#price-info-toggleBtn").click(function(){
-              const x = document.getElementById("price-info-toggleBtn")
-              if (x.classList.contains("fa-caret-down")){
-                  x.classList.remove("fa-caret-down")
-                  x.classList.add("fa-caret-up")
-              }else{
-                  x.classList.remove("fa-caret-up")
-                  x.classList.add("fa-caret-down")
-              }
-            $("#price-info").animate({
-              height: 'toggle'
-            });
-          });
-          $("#stock-info-toggleBtn").click(function(){
-              const x = document.getElementById("stock-info-toggleBtn")
-              if (x.classList.contains("fa-caret-down")){
-                  x.classList.remove("fa-caret-down")
-                  x.classList.add("fa-caret-up")
-              }else{
-                  x.classList.remove("fa-caret-up")
-                  x.classList.add("fa-caret-down")
-              }
-            $("#stock-info").animate({
-              height: 'toggle'
-            });
-          });
-        });
-    </script>
 </body>
 </html>

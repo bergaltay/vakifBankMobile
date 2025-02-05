@@ -202,3 +202,24 @@ header .calendar-icon {
     display: flex;
     margin-bottom: 0;
 }
+.price-eye{
+    width: 60%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    margin: auto;
+}
+
+.price-eye button{
+    font-size: 18px;
+    background-color: inherit;
+    border: none;
+}
+.price-eye button:active{
+    transform: scale(1.2);
+}
+
+.user-info-hidden{
+    color: transparent;
+}

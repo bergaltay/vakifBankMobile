@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container">
-  <!-- Header Section -->
+  <!-- Header -->
   <header>
     <div class="icon">&#128100;</div>
     <div class="logo">
@@ -16,7 +16,7 @@
     </div>
     <div class="language">EN</div>
   </header>
-  <!-- Features Section -->
+  <!-- Features -->
   <section class="features">
     <div class="feature">
       <div class="circle"></div>
@@ -41,10 +41,11 @@
   </section>
 
 
-  <!-- Login Form Section -->
+  <!-- Login Menü -->
   <main class="login-form">
     <div class="avatar">&#128100;</div>
     <h2>Hoş Geldiniz</h2>
+    <p id="errorMessage"></p>
     <form>
       <div class="form-group">
         <label for="username"></label>
@@ -59,7 +60,7 @@
     </form>
   </main>
 
-  <!-- Footer Menu -->
+  <!-- Footer Menü -->
   <footer class="footer-menu">
     <!--<div class="menu-item">
       <img src="fast-icon.png" alt="FAST İşlemleri">
@@ -83,7 +84,7 @@
         document.getElementById('login-btn').addEventListener('click', async function () {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            //const errorMessage = document.getElementById('errorMessage');
+            const errorMessage = document.getElementById('errorMessage');
 
             try {
                 const response = await fetch('/login', {
@@ -97,10 +98,10 @@
                 if (response.ok) {
                     window.location.href = "/home";
                 } else {
-                    //errorMessage.textContent = data.error;
+                    errorMessage.textContent = "Kullanıcı Adı veya Şifre Hatalı.";
                 }
             } catch (error) {
-                //errorMessage.textContent = "An unexpected error occurred.";
+                errorMessage.textContent = "Kullanıcı Adı veya Şifre Hatalı.";
             }
         });
     </script>
