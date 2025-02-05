@@ -6,7 +6,7 @@ conn = DBConnector.get_db_connection()
 
 def get_user_stock_info(tckn,interval):
     data = []
-    if interval == 0:
+    if interval == "all":
         cursor = conn.cursor()
         try:
             query = f"""
@@ -114,9 +114,89 @@ def get_user_stock_info(tckn,interval):
     return formatted_data
 
 
+def get_stocks_detail(tckn,stock_name):
+    cursor = conn.cursor()
+    result = []
+    try:
+        query = f"""
+        with AggregatedData AS (
+            SELECT
+                p.stockID,
+                SUM(p.quantity) AS total_quantity,
+                ROUND(SUM(p.buy_price * p.quantity) / SUM(p.quantity),2) AS wa_buy_price
+            FROM portfolio p
+            inner join stock_price_curr spc on p.stockID=spc.stockID
+            GROUP BY p.stockID
+        )
+        select sd.full_name,
+               s.name,
+               sd.market,
+               a.total_quantity,
+               p.blocked_quantity,
+               spc.price,
+               a.wa_buy_price,
+               ROUND(a.wa_buy_price*a.total_quantity,2) AS total,
+               ROUND(spc.price*a.total_quantity,2) as curr_total
+        from stocks s
+        inner join AggregatedData a on a.stockID=s.stockID
+        inner join stocks_detail sd on s.stockID = sd.stockID
+        inner join portfolio p on s.stockID = p.stockID
+        inner join stock_price_curr spc on s.stockID = spc.stockID
+        inner join users u on p.userID = u.userID
+        where u.tckn = {tckn} and s.name = "{stock_name}"
+        group by sd.full_name, s.name, sd.market, a.total_quantity, p.blocked_quantity, spc.price, a.wa_buy_price,total,curr_total
+        """
+        cursor.execute(query)
+        result = cursor.fetchall()
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+    formatted_data = []
+    for i in result:
+        formatted_data.append({
+            "stock_full_name":      i[0],
+            "stock_name":           i[1],
+            "market":               i[2],
+            "quantity":             i[3],
+            "blocked_quantity":     i[4],
+            "curr_price":           "{:,.2f}".format(i[5]),
+            "wa_buy_price":         "{:,.2f}".format(i[6]),
+            "buy_total":            "{:,.2f}".format(float(round(i[3]*i[6],2))),
+            "profit":               "{:,.2f}".format(round((i[5]-i[6])*i[3],2)),
+            "curr_total":           "{:,.2f}".format(float(round(i[5]*i[3],2))),
+            "tracker":              (i[5]-i[6])*i[3]
+        })
+        return formatted_data[0]
+
+def get_stock_price_details(stock_name):
+    cursor = conn.cursor()
+    data = []
+    try:
+        query = f"""
+            select spd.adh7, spd.adh30, spd.market_cap, spd.volume, spd.daily_open from stocks_price_details spd
+            inner join stocks s on spd.stockID = s.stockID
+            where s.name = "{stock_name}"
+        """
+        cursor.execute(query)
+        data = cursor.fetchall()
+    except Exception as e:
+        print(e)
+        return data
+    finally:
+        cursor.close()
+    formatted_data = {
+        "adh7": "{:,.2f}".format(data[0][0]),
+        "adh30": "{:,.2f}".format(data[0][1]),
+        "market_cap": "{:,.2f}".format(data[0][2]),
+        "volume":  "{:,.2f}".format(data[0][3]),
+        "daily_open": "{:,.2f}".format(data[0][4]),
+    }
+    return formatted_data
 
 
 
 
-print(get_user_stock_info(99999999999,0))
-print(get_user_stock_info(99999999999,7))
+
+
+print(get_stock_price_details("THYAO"))

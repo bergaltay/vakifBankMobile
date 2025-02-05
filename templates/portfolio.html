@@ -15,7 +15,7 @@
 <body>
     <div class="container">
         <header>
-            <div class="back-button"><a style="text-decoration: none" href="/login">&larr;</a></div>
+            <div class="back-button"><a style="text-decoration: none" href="/">&larr;</a></div>
             <h1>Portföyüm</h1>
             <div class="calendar-icon"></div>
         </header>
@@ -41,111 +41,109 @@
                 </div>
 
             </div>
-
+            <div class="dashboard-container-header">
+                    <div class="header-menu">
+                        <h2>Hisse Senetleri</h2>
+                        <button id="stocks-div-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                    </div>
+            </div>
             <section class="dashboard-container">
-                <div class="dashboard-container-header">
-                    <div class="widget-body" style="background-color: #eeeeee;">
-                        <div class="widget-rowline">
-                            <h2>Hisse Senetleri</h2>
+                <div id="stocks-div" >
+                    <div class="widget-top">
+                        <div class="total-portfolio">
+                            <h3>{{ "{:,.2f}".format(stockTotalValues[1]) }} TL</h3>
+                            <p style="margin-top: 5px;">Ana Para: <strong>{{  "{:,.2f}".format(stockTotalValues[0]) }} TL</strong></p>
+                            <p class="change" style="margin-top: 5px;"><i class="{{ 'fas fa-arrow-down !important' if stockTotalValues[2]|float < 0 else 'fas fa-arrow-up' }}"></i> {{ stockTotalValues[2] }}%</p>
                         </div>
-                        <div class="widget-rowline">
-                            <button id="toggleBtn-stockList" class="fa fa-angle-up" onclick="toggleBtn()"></button>
-                        </div>
-                    </div>
-                </div>
-                <div id="stock-widgets-top" class="widget-top">
-                    <div class="total-portfolio">
-                        <h3>{{ "{:,.2f}".format(stockTotalValues[1]) }} TL</h3>
-                        <p style="margin-top: 5px;">Ana Para: <strong>{{  "{:,.2f}".format(stockTotalValues[0]) }} TL</strong></p>
-                        <p class="change" style="margin-top: 5px;"><i class="{{ 'fas fa-arrow-down !important' if stockTotalValues[2]|float < 0 else 'fas fa-arrow-up' }}"></i> {{ stockTotalValues[2] }}%</p>
-                    </div>
-                    <div class="card-body">
-                        {{ pieChart|safe }}
-                    </div>
-                </div>
-                <div id="stock_table"></div>
-
-
-
-                <!-- Hisse Tablosu-->
-                {% if table_data %}
-                <div  id="stock-widgets" >
-
-                    <div class="widget">
-                        <div>
-                            <nav class="tabs">
-                                <div id="home" class="tab">        <a href="/home#stock_table">Toplam</a></div>
-                                <div id="1" class="tab">        <a href="/home/1#stock_table">Bugün</a></div>
-                                <div id="7" class="tab">        <a href="/home/7#stock_table">1 Hafta</a></div>
-                                <div id="30" class="tab">       <a href="/home/30#stock_table">1 Ay</a></div>
-                                <div id="365" class="tab">      <a href="/home/365#stock_table">1 Yıl</a></div>
-                            </nav>
+                        <div class="card-body">
+                            {{ pieChart|safe }}
                         </div>
                     </div>
-                    <div class="widget-container">
-                        {% for row in table_data %}
-                        <a href="/info/{{ row['stock_name'] }}"  style="text-decoration: none; color: inherit;">
-                            <div class="widget">
-                                <div class="widget-header">
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="widget-icon">
-                                            <img src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ row['stock_name'] | lower }}.png&w=2048&q=75">
-                                        </div>
-                                        <h3>{{ row['stock_name'] }}</h3>
-                                    </div>
-                                    <h3>{{ "{:,.2f}".format(row['total']) }} TL</h3>
-                                </div>
-                                <div class="widget-body">
-                                    <div class="widget-rowline">
-                                        <p style="font-weight: bold; color: #4c90af; left: 0">
-                                            {{ "{:,.2f}".format(((row['total']/stockTotalValues[1])*100)|round(2)) }}%
-                                        </p>
-                                    </div>
-                                    <div class="widget-rowline">
-                                        <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
-                                            <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> ({{ "{:,.2f}".format(row['profit']|float) }} TL)
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="widget-body">
-                                    <div class="progress-bar">
-                                        <div class="progress" style="width: {{(((row['curr_price']|float * row['quantity']|float)/stockTotalValues[1])*100)|round(2)}}%;"></div>
-                                    </div>
-                                </div>
-                                <div class="widget-body">
-                                    <div class="widget-rowline">
-                                        <p>Satılabilir Adet</p>
-                                        <strong>{{ row['quantity'] }}</strong>
-                                    </div>
-                                    <div class="widget-rowline">
-                                        <p>Maliyet*</p>
-                                        <strong>{{ row['wa_buy_price'] }} TL</strong>
-                                    </div>
-                                    <div class="widget-rowline">
-                                        <p>Son İşlem Fiyatı</p>
-                                        <strong>{{ row['curr_price'] }} TL</strong>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p style="text-align: left; margin-top: 5px;">Pozisyon Süresi:
-                                        <strong>{{ row['days_passed'] }} Gün </strong>
-                                        <a style="margin-left: 4px;">({{ row['from_this_time']}})</a>
-                                    </p>
-                                </div>
+                    <div id="stock_table"></div>
+                    <!-- Hisse Tablosu-->
+                    {% if table_data %}
+                    <div  id="stock-widgets" >
+
+                        <div class="widget">
+                            <div>
+                                <nav class="tabs">
+                                    <div id="home" class="tab">        <a href="/home#stock_table">Toplam</a></div>
+                                    <div id="0" class="tab">        <a href="/home/0#stock_table">Bugün</a></div>
+                                    <div id="7" class="tab">        <a href="/home/7#stock_table">1 Hafta</a></div>
+                                    <div id="30" class="tab">       <a href="/home/30#stock_table">1 Ay</a></div>
+                                    <div id="365" class="tab">      <a href="/home/365#stock_table">1 Yıl</a></div>
+                                </nav>
                             </div>
-                        </a>
-                        {% endfor %}
+                        </div>
+                        <div class="widget-container">
+                            {% for row in table_data %}
+                            <a href="/info/{{ row['stock_name'] }}"  style="text-decoration: none; color: inherit;">
+                                <div class="widget">
+                                    <div class="widget-header">
+                                        <div style="display: flex; align-items: center;">
+                                            <div class="widget-icon">
+                                                <img src="https://www.hangikredi.com/_next/image?url=https%3A%2F%2Fcdn.hangikredi.com%2Fsymbols%2F{{ row['stock_name'] | lower }}.png&w=2048&q=75">
+                                            </div>
+                                            <h3>{{ row['stock_name'] }}</h3>
+                                        </div>
+                                        <h3>{{ "{:,.2f}".format(row['total']) }} TL</h3>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-rowline">
+                                            <p style="font-weight: bold; color: #4c90af; left: 0">
+                                                {{ "{:,.2f}".format(((row['total']/stockTotalValues[1])*100)|round(2)) }}%
+                                            </p>
+                                        </div>
+                                        <div class="widget-rowline">
+                                            <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
+                                                <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> ({{ "{:,.2f}".format(row['profit']|float) }} TL)
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: {{(((row['curr_price']|float * row['quantity']|float)/stockTotalValues[1])*100)|round(2)}}%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-rowline">
+                                            <p>Satılabilir Adet</p>
+                                            <strong>{{ row['quantity'] }}</strong>
+                                        </div>
+                                        <div class="widget-rowline">
+                                            <p>Maliyet*</p>
+                                            <strong>{{ row['wa_buy_price'] }} TL</strong>
+                                        </div>
+                                        <div class="widget-rowline">
+                                            <p>Son İşlem Fiyatı</p>
+                                            <strong>{{ row['curr_price'] }} TL</strong>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p style="text-align: left; margin-top: 5px;">Pozisyon Süresi:
+                                            <strong>{{ row['days_passed'] }} Gün </strong>
+                                            <a style="margin-left: 4px;">({{ row['from_this_time']}})</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
                     </div>
+                    {% else %}
+                    <p>Tabloda veri bulunmamaktadır.</p>
+                    {% endif %}
                 </div>
-                {% else %}
-                <p>Tabloda veri bulunmamaktadır.</p>
-                {% endif %}
 
                 <!-- Fon Tablosu-->
                 <div class="dashboard-container-header">
-                    <h2>Yatırım Fonu</h2>
+                    <div class="header-menu">
+                        <h2>Yatırım Fonları</h2>
+                        <button id="funds-div-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                    </div>
                 </div>
-                <div class="widget-top">
+                <div id="funds-div">
+                    <div class="widget-top">
                     <div class="total-portfolio">
                         <h3>{{ "{:,.2f}".format(fundsTotalValues[1]|round(2)) }} TL</h3>
                         <p style="margin-top: 5px;">Ana Para: <strong>{{  "{:,.2f}".format(fundsTotalValues[0]|round(2)) }} TL</strong></p>
@@ -155,86 +153,94 @@
                         {{ pieChart2|safe }}
                     </div>
                 </div>
-                {% if table_data2 %}
-                <div class="widget-container">
-                    {% for row in table_data2 %}
-                    <div class="widget">
-                        <div class="widget-header-fund">
-                            <div style="display: flex; align-items: center;">
-                                <h3>{{ row['symbol'] }}</h3>
+                    {% if table_data2 %}
+                    <div class="widget-container">
+                        {% for row in table_data2 %}
+                        <div class="widget">
+                            <div class="widget-header-fund">
+                                <div style="display: flex; align-items: center;">
+                                    <h3>{{ row['symbol'] }}</h3>
+                                </div>
                             </div>
-                        </div>
-                        <h3 style="text-align: right" >{{ "{:,.2f}".format(((row['curr_price']|float * row['quantity']|float))|round(2)) }} TL</h3>
-                        <div class="widget-body">
-                            <div class="widget-rowline">
-                                <p style="font-weight: bold; color: #4c90af; left: 0">
-                                    {{ (((row['curr_price']|float * row['quantity']|float) / fundsTotalValues[1]|float) * 100) | round(2) }}%
+                            <h3 style="text-align: right" >{{ "{:,.2f}".format(((row['curr_price']|float * row['quantity']|float))|round(2)) }} TL</h3>
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                    <p style="font-weight: bold; color: #4c90af; left: 0">
+                                        {{ (((row['curr_price']|float * row['quantity']|float) / fundsTotalValues[1]|float) * 100) | round(2) }}%
+                                    </p>
+                                </div>
+                                <div class="widget-rowline">
+                                    <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
+                                        <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> ({{ "{:,.2f}".format(row['profit']|float) }} TL)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: {{ (((row['curr_price']|float * row['quantity']|float) / fundsTotalValues[1]|float) * 100) | round(2) }}%;"></div>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-rowline">
+                                    <p>Satılabilir Adet</p>
+                                    <strong>{{ row['quantity'] }}</strong>
+                                </div>
+                                <div class="widget-rowline">
+                                    <p>Maliyet*</p>
+                                    <strong>{{ row['buy_price'] }} TL</strong>
+                                </div>
+                                <div class="widget-rowline">
+                                    <p>Son İşlem Fiyatı</p>
+                                    <strong>{{ row['curr_price'] }} TL</strong>
+                                </div>
+                            </div>
+                            <div>
+                                <p style="text-align: left; margin-top: 5px;">Pozisyon Süresi:
+                                    <strong>{{ row['days_passed'] }} Gün </strong>
+                                    <a style="margin-left: 4px;">({{ row['buy_date_user']}})</a>
                                 </p>
                             </div>
-                            <div class="widget-rowline">
-                                <p class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}">
-                                    <strong  class="{{ 'text-red' if row['ratio']|float < 0 else 'text-green' }}"><i class="{{ 'fas fa-arrow-down !important' if row['ratio']|float < 0 else 'fas fa-arrow-up' }}"></i> {{ row['ratio'] }}%</strong> ({{ "{:,.2f}".format(row['profit']|float) }} TL)
-                                </p>
-                            </div>
                         </div>
-                        <div class="widget-body">
-                            <div class="progress-bar">
-                                <div class="progress" style="width: {{ (((row['curr_price']|float * row['quantity']|float) / fundsTotalValues[1]|float) * 100) | round(2) }}%;"></div>
-                            </div>
-                        </div>
-                        <div class="widget-body">
-                            <div class="widget-rowline">
-                                <p>Satılabilir Adet</p>
-                                <strong>{{ row['quantity'] }}</strong>
-                            </div>
-                            <div class="widget-rowline">
-                                <p>Maliyet*</p>
-                                <strong>{{ row['buy_price'] }} TL</strong>
-                            </div>
-                            <div class="widget-rowline">
-                                <p>Son İşlem Fiyatı</p>
-                                <strong>{{ row['curr_price'] }} TL</strong>
-                            </div>
-                        </div>
-                        <div>
-                            <p style="text-align: left; margin-top: 5px;">Pozisyon Süresi:
-                                <strong>{{ row['days_passed'] }} Gün </strong>
-                                <a style="margin-left: 4px;">({{ row['buy_date_user']}})</a>
-                            </p>
-                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+                    {% endif %}
                 </div>
-                {% else %}
-                <p>Tabloda veri bulunmamaktadır.</p>
-                {% endif %}
+
             </section>
-
-
         </section>
     </div>
         <div class="chart">
             <p class="info">Portföy değeri net olarak hesaplanmıştır.</p>
         </div>
     <script>
-        function toggleBtn() {
-              var x = document.getElementById("stock-widgets");
-              var y = document.getElementById("stock-widgets-top")
-              var btn = document.getElementById("toggleBtn-stockList")
-              if (x.style.display === "none") {
-                    x.style.display = "block";
-                    y.style.display = "block";
-                    btn.classList.remove("fa-angle-up")
-                    btn.classList.add("fa-angle-down")
-              } else {
-                    x.style.display = "none";
-                    y.style.display = "none";
-                    btn.classList.add("fa-angle-up")
-              }
-            }
+
         $(document).ready(function () {
-            var y = document.getElementById("stock-widgets-top")
-            y.style.display = "none";
+          $("#stocks-div-toggleBtn").click(function(){
+              const x = document.getElementById("stocks-div-toggleBtn")
+              if (x.classList.contains("fa-caret-down")){
+                  x.classList.remove("fa-caret-down")
+                  x.classList.add("fa-caret-up")
+              }else{
+                  x.classList.remove("fa-caret-up")
+                  x.classList.add("fa-caret-down")
+              }
+            $("#stocks-div").animate({
+              height: 'toggle'
+            });
+          });
+          $("#funds-div-toggleBtn").click(function(){
+              const x = document.getElementById("funds-div-toggleBtn")
+              if (x.classList.contains("fa-caret-down")){
+                  x.classList.remove("fa-caret-down")
+                  x.classList.add("fa-caret-up")
+              }else{
+                  x.classList.remove("fa-caret-up")
+                  x.classList.add("fa-caret-down")
+              }
+            $("#funds-div").animate({
+              height: 'toggle'
+            });
+          });
             var pageUrl = window.location.href;
             const urlList = pageUrl.split("/");
             var date = urlList[urlList.length-1].split("#")[0];

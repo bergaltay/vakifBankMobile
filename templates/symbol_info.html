@@ -7,19 +7,83 @@
     <link rel="stylesheet" href="/static/widget.css">
     <link rel="stylesheet" href="/static/symbol_info.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="back-button"><a style="text-decoration: none" href="/home">&larr;</a></div>
+            <div class="back-button"><a style="text-decoration: none" href="/home#stock_table">&larr;</a></div>
                 <h1 style="left: 0">{{symbol | upper}} </h1>
             <div class="calendar-icon"></div>
         </header>
         <section class="portfolio-details">
+
             <div class="card-body">
+                <br>
+                <p>{{symbol | upper}} (30 Gün)</p>
                 {{ chart|safe }}
             </div>
+            <div class="widget-container">
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="widget-rowline">
+                            <h2>Haftalık Fiyat Bilgileri</h2>
+                        </div>
+                        <div class="widget-rowline">
+                            <button id="price-info-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                        </div>
+                    </div>
+                    <div id="price-info">
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Açılış Fiyatı</p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{stock_details_info['daily_open']|upper}} TL</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Haftalık En Yüksek </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{stock_details_info['adh7']|upper}} TL</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Aylık En Yüksek </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{stock_details_info['adh30']|upper}} TL</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Günlük Hacim (Lot) </p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{stock_details_info['volume']|upper}}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="widget-body">
+                            <div class="widget-rowline">
+                                <p>Piyasa Değeri</p>
+                            </div>
+                            <div class="widget-rowline">
+                                <p class="p-upper"> {{stock_details_info['market_cap']|upper}} TL</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
             <!--<div class="buysell-container">
                 <nav class="buysell-tabs">
                     <div class="buysell-tab active">ALIŞ</div>
@@ -143,15 +207,20 @@
             <div class="widget-container">
                 <div class="widget">
                     <div class="widget-header">
-                        <h2>Detay Bilgileri</h2>
+                        <div class="widget-rowline">
+                            <h2>Detay Bilgileri</h2>
+                        </div>
+                        <div class="widget-rowline">
+                            <button id="stock-info-toggleBtn" class="btnToggle fa-solid fa-caret-down"></button>
+                        </div>
                     </div>
-                    <div>
+                    <div id="stock-info">
                         <div class="widget-body">
                         <div class="widget-rowline">
                             <p>Hisse Senedi Adı </p>
                         </div>
                         <div class="widget-rowline">
-                            <p class="p-upper"> {{symbol|upper}} </p>
+                            <p class="p-upper"> {{stock_info['stock_full_name']|upper}} </p>
                         </div>
                     </div>
                         <hr>
@@ -160,7 +229,7 @@
                                 <p>Hisse Senedi Kodu </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['stock_name']|upper}} </p>
                             </div>
                         </div>
                         <hr>
@@ -169,7 +238,7 @@
                                 <p>Pazar </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['market']|upper}} </p>
                             </div>
                         </div>
                         <hr>
@@ -178,7 +247,7 @@
                                 <p>Satılabilir Adet </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['quantity']|upper}} </p>
                             </div>
                         </div>
                         <hr>
@@ -187,7 +256,7 @@
                                 <p>Bloke Adet </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['blocked_quantity']|upper}} </p>
                             </div>
                         </div>
                         <hr>
@@ -196,7 +265,7 @@
                                 <p>Son İşlem Fiyatı </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['curr_price']|upper}} TL</p>
                             </div>
                         </div>
                         <hr>
@@ -205,7 +274,7 @@
                                 <p>Birim Maliyet </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['wa_buy_price']|upper}} TL</p>
                             </div>
                         </div>
                         <hr>
@@ -214,7 +283,7 @@
                                 <p>Maliyet Tutar </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['buy_total']|upper}} TL</p>
                             </div>
                         </div>
                         <hr>
@@ -223,7 +292,7 @@
                                 <p>Kar/Zarar </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper {{ 'text-red' if stock_info['profit']|float < 0 else 'text-green' }}" >{{stock_info['profit']|upper}} TL</p>
                             </div>
                         </div>
                         <hr>
@@ -232,7 +301,7 @@
                                 <p>Tutar </p>
                             </div>
                             <div class="widget-rowline">
-                                <p class="p-upper"> {{symbol|upper}} </p>
+                                <p class="p-upper"> {{stock_info['curr_total']|upper}} TL</p>
                             </div>
                         </div>
                     </div>
@@ -243,5 +312,35 @@
 
 
     </div>
+    <script>
+        $(document).ready(function(){
+          $("#price-info-toggleBtn").click(function(){
+              const x = document.getElementById("price-info-toggleBtn")
+              if (x.classList.contains("fa-caret-down")){
+                  x.classList.remove("fa-caret-down")
+                  x.classList.add("fa-caret-up")
+              }else{
+                  x.classList.remove("fa-caret-up")
+                  x.classList.add("fa-caret-down")
+              }
+            $("#price-info").animate({
+              height: 'toggle'
+            });
+          });
+          $("#stock-info-toggleBtn").click(function(){
+              const x = document.getElementById("stock-info-toggleBtn")
+              if (x.classList.contains("fa-caret-down")){
+                  x.classList.remove("fa-caret-down")
+                  x.classList.add("fa-caret-up")
+              }else{
+                  x.classList.remove("fa-caret-up")
+                  x.classList.add("fa-caret-down")
+              }
+            $("#stock-info").animate({
+              height: 'toggle'
+            });
+          });
+        });
+    </script>
 </body>
 </html>

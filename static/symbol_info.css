@@ -70,11 +70,13 @@ header .calendar-icon {
 .card-body{
     background-color: #f9f9f9;
     width: 400px;
-    height: 180px;
+    height: 240px;
     max-width: 100%;
-    margin: 20px auto;
+    margin: 0 auto 20px;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 .info-body{
     border-bottom: 2px solid #ddd;
@@ -99,6 +101,7 @@ hr{
 .p-upper {
     font-size: 16px !important;
     font-weight: bold;
+    text-align: right;
 }
 
 .widget-header p{
@@ -197,7 +200,15 @@ hr{
     background-color: #f9f9f9;
     border: 0;
 }
-
+.widget:hover {
+    background-color: #f9f9f9;
+}
+.card-body p{
+    text-align: left;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
 /*Sütünlar*/
 
 

@@ -36,6 +36,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
+
 .widget-top {
     background-color: #f9f9f9;
     border-bottom: 2px solid #ddd;
@@ -148,4 +149,16 @@
 
 .text-green {
     color: green;
+}
+.btnToggle{
+    height: 32px;
+    width: 32px;
+    font-size: 24px;
+    color: inherit;
+    background-color: transparent;
+    border: none;
+}
+.btnToggle:active{
+    transform: scale(2);
+    transition: transform 1s ease;
 }

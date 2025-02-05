@@ -62,7 +62,7 @@ def home():
     cursor = DBOperators.tickerListOfUser(tckn)
     try:
         cursor.fetchall()
-        info_data = db_operations.get_user_stock_info(tckn,0)
+        info_data = db_operations.get_user_stock_info(tckn,"all")
         funds_data = misc.detailsFormatter(DBOperators.UserFundPortfolioDetails(tckn).fetchall())
         funds_data = misc.dataFormatter(funds_data)
         acc_num = DBOperators.getAccNumber(tckn)
@@ -96,7 +96,8 @@ def portfolio(dayInterval):
     cursor = DBOperators.tickerListOfUser(tckn)
     try:
         cursor.fetchall()
-        info_data = db_operations.get_user_stock_info(tckn,dayInterval)
+        info_data = db_operations.get_user_stock_info(tckn,days)
+        print(info_data)
         funds_data = misc.detailsFormatter(DBOperators.UserFundPortfolioDetails(tckn).fetchall())
         funds_data = misc.dataFormatter(funds_data)
         acc_num = DBOperators.getAccNumber(tckn)
@@ -126,9 +127,12 @@ def portfolio(dayInterval):
 @app.route('/info/<symbol>', endpoint="symbol_info")
 @token_required
 def symbol_info(symbol):
+    tckn = getUserName()
     return render_template('symbol_info.html',
                            symbol=symbol,
-                           chart=graphOperators.getGraphOfSymbolPrice(DBOperators.getXdayHistoryOfSymbol(symbol,7))
+                           chart=graphOperators.getGraphOfSymbolPrice(DBOperators.getXdayHistoryOfSymbol(symbol,30)),
+                           stock_info=db_operations.get_stocks_detail(tckn, symbol),
+                            stock_details_info=db_operations.get_stock_price_details(symbol)
                            )
 
 
